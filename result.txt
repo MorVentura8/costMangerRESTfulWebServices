@@ -1,0 +1,73 @@
+Base: http://localhost:3000
+Output file: result.txt
+User: 123123 Year: 2025 Month1: 9 Month2: 8
+
+== testing getting the about == GET http://localhost:3000/api/about
+data.status_code= 200
+data.text= [{"first_name":"Mor","last_name":"Ventura"}]
+json= [
+  {
+    "first_name": "Mor",
+    "last_name": "Ventura"
+  }
+]
+
+== testing getting the report - 1 == GET http://localhost:3000/api/report?id=123123&year=2025&month=9
+data.status_code= 404
+data.text= {"ok":false,"error":"user not found"}
+json= {
+  "ok": false,
+  "error": "user not found"
+}
+
+== ensuring test user == user:123123 POST http://localhost:3000/api/add
+status: 201
+text: {"id":123123,"first_name":"Test","last_name":"User","birthday":"1999-09-08T22:00:00.000Z"}
+
+== testing adding cost item == POST http://localhost:3000/api/add
+data.status_code= 201
+data.text= {"ok":true,"cost":{"description":"milk","category":"food","userid":123123,"sum":8,"_id":"68cc14b62b8c5747d344c5b2","createdAt":"2025-09-18T14:18:30.671Z","updatedAt":"2025-09-18T14:18:30.671Z"}}
+json= {
+  "ok": true,
+  "cost": {
+    "description": "milk",
+    "category": "food",
+    "userid": 123123,
+    "sum": 8,
+    "_id": "68cc14b62b8c5747d344c5b2",
+    "createdAt": "2025-09-18T14:18:30.671Z",
+    "updatedAt": "2025-09-18T14:18:30.671Z"
+  }
+}
+
+== testing getting the report - 2 == GET http://localhost:3000/api/report?id=123123&year=2025&month=8
+data.status_code= 200
+data.text= {"userid":123123,"year":2025,"month":8,"costs":[{"food":[]},{"health":[]},{"housing":[]},{"sports":[]},{"education":[]}]}
+json= {
+  "userid": 123123,
+  "year": 2025,
+  "month": 8,
+  "costs": [
+    {
+      "food": []
+    },
+    {
+      "health": []
+    },
+    {
+      "housing": []
+    },
+    {
+      "sports": []
+    },
+    {
+      "education": []
+    }
+  ]
+}
+
+== SUMMARY ==
+about OK: True
+report1 OK: True
+add cost OK: True
+report2 OK: True
